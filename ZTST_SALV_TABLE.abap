@@ -36,7 +36,8 @@ CLASS lcl_report IMPLEMENTATION.
           CHANGING
             t_table      = t_outtab ).
 
-      CATCH cx_root.
+      CATCH cx_root INTO DATA(lcx).
+        MESSAGE lcx->get_text( ) TYPE 'S' DISPLAY LIKE 'E'.
     ENDTRY.
 
     main( ).
@@ -48,6 +49,7 @@ CLASS lcl_report IMPLEMENTATION.
     TRY .
         r_table->get_functions( )->set_all( abap_true ).
         r_table->get_columns( )->set_optimize( abap_true ).
+        r_table->get_display_settings( )->set_striped_pattern( cl_salv_display_settings=>true ).
 
         r_event ?= r_table->get_event( ).
         SET HANDLER lcl_report=>handle_click   FOR r_event.
@@ -55,7 +57,29 @@ CLASS lcl_report IMPLEMENTATION.
 
         r_table->get_columns( )->get_column( 'MANDT' )->set_visible( abap_false ).
 
-      CATCH cx_root.
+        DATA(lr_aggr) = r_table->get_aggregations( ).
+        lr_aggr->add_aggregation( columnname = 'DISTANCE' ).
+        lr_aggr->add_aggregation( columnname = 'FLTIME' ).
+
+        DATA(lr_sorts) = r_table->get_sorts( ).
+
+        lr_sorts->add_sort( columnname = 'DISTID'
+                            position   = 1
+                            subtotal   = abap_true
+                            sequence   = if_salv_c_sort=>sort_up ).
+
+        lr_sorts->add_sort( columnname = 'COUNTRYFR'
+                            position   = 2
+                            subtotal   = abap_true
+                            sequence   = if_salv_c_sort=>sort_up ).
+
+        lr_sorts->add_sort( columnname = 'CARRID'
+                            position   = 3
+*                            subtotal   = abap_true
+                            sequence   = if_salv_c_sort=>sort_up ).
+
+      CATCH cx_root INTO DATA(lcx).
+        MESSAGE lcx->get_text( ) TYPE 'S' DISPLAY LIKE 'E'.
     ENDTRY.
 
   ENDMETHOD.
@@ -106,5 +130,5 @@ INITIALIZATION.
   DATA(lcl_report) = NEW lcl_report( ).
 
 START-OF-SELECTION.
-  lcl_report=>send_alv_in_email_attach( ).
+*  lcl_report=>send_alv_in_email_attach( ).
   lcl_report=>show_alv( ).
