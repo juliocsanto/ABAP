@@ -120,8 +120,8 @@ CLASS lcl_alv DEFINITION FINAL.
                                            end_line     TYPE i DEFAULT 25,
 
       show_alv,
-      set_event_handlers         IMPORTING r_events     TYPE REF TO lcl_if_handle_events,
-      set_own_status             IMPORTING pfstatus     TYPE sypfkey,
+      set_event_handlers         IMPORTING r_events              TYPE REF TO lcl_if_handle_events,
+      set_own_status             IMPORTING pfstatus              TYPE sypfkey,
       get_line                   IMPORTING row  TYPE i
                                  CHANGING  line TYPE any.
 
@@ -400,6 +400,8 @@ ENDCLASS.
 FORM handle_user_command  USING i_ucomm TYPE salv_de_function.
   CASE i_ucomm.
     WHEN '&EMAIL'.
+      CHECK alv IS BOUND.
+
       DATA(lv_subject) = 'ALV sent in e-mail attachment'.
       DATA(lv_content) = 'This is a <b>e-mail body</b> content! See XSLX attachment!'.
 
@@ -491,7 +493,7 @@ FORM handle_double_click  USING i_row    TYPE i
 
   TRANSLATE lv_carrname TO UPPER CASE.
 
-  DATA(lv_title) = |Preço Anual por Vôos - Companhia Aérea: { lv_carrname }|.
+  DATA(lv_title) = CONV lvc_title( |Preço Anual por Vôos - Companhia Aérea: { lv_carrname }| ).
 
   DATA(t_aggrs) =
     VALUE lcl_alv=>tty_aggregations(
@@ -512,7 +514,7 @@ FORM handle_double_click  USING i_row    TYPE i
                                t_aggregations = t_aggrs
                                t_sorts        = t_sorts
                                t_column_texts = t_column_texts
-                               alv_title      = CONV #( lv_title ) ).
+                               alv_title      = lv_title ).
 
   sec_alv->set_screen_popup( ).
 
