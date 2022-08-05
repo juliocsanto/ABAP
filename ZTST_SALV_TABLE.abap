@@ -92,8 +92,6 @@ CLASS lcl_alv DEFINITION FINAL.
            tty_column_texts TYPE STANDARD TABLE OF ty_column_texts
                               WITH KEY columnname.
 
-    DATA: lr_handle_line TYPE REF TO data.
-
     METHODS:
       constructor                IMPORTING t_main_tab            TYPE ANY TABLE
                                            alv_title             TYPE lvc_title                   OPTIONAL
