@@ -1,5 +1,5 @@
-# ABAP
-ABAP Repository to store and review some stuffs on ABAP, Fiori and UI5
+# Main Goal
+Repository to store and review some stuffs on ABAP, Fiori and UI5
 
 Here are somethings I've learned on SAP documentation, researchings and projects.
 
