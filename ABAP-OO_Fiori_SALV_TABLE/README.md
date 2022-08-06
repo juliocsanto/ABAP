@@ -18,7 +18,7 @@ Steps needed:
 ![view-on-s4](view-on-s4-2.png?raw=true)
 ![view-on-s4](view-on-s4-3.png?raw=true)
 
-## VIew on Fiori Launchpad
+## View on Fiori Launchpad
 
 ![view-on-lp](view-on-lp1.png?raw=true)
 ![view-on-lp](view-on-lp2.png?raw=true)
