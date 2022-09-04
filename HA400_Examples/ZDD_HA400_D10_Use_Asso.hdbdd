@@ -1,0 +1,17 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D10'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Use Association'
+define view ZDD_HA400_D10_Use_Asso as 
+    select from ZDD_HA400_D09_Exposed_Asso 
+{
+    carrid, currcode,
+    sum(loccuram) as total_amount,
+    //use association exposed by ZDD_HA400_D10
+    //note that the columns used are not included
+    //explicitily in the underlying CDS view
+    _Customer.region,
+    _Customer.discount
+} where _Customer.country = 'US'
+  group by carrid, currcode,  _Customer.region, _Customer.discount

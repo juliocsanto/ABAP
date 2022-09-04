@@ -1,0 +1,33 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D06'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Complex'
+define view ZDD_HA400_D06_Complex as 
+    select from sbook as book 
+           inner join scustom as customer
+                   on book.bookid = customer.id
+{
+    book.carrid,
+    
+    @Semantics.currencyCode
+    book.loccurkey as currcode,
+    
+    @Semantics.amount.currencyCode: 'currcode'
+    sum(book.loccuram) as total_amount ,
+    
+    @Semantics.amount.currencyCode: 'currcode'
+    max(book.loccuram) as max_amount,
+    
+    @Semantics.amount.currencyCode: 'currcode'
+    min(book.loccuram) as min_amount,
+    
+    customer.region,
+    customer.discount
+}
+where customer.country = 'US'
+
+group by book.carrid, book.loccurkey,
+         customer.region, customer.discount
+
+having sum(book.loccuram) > 100

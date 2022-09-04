@@ -1,0 +1,25 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D07'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Union'
+define view ZDD_HA400_D07_Union as 
+select from scustom 
+{
+    id,
+    form, name,
+    street,
+    postcode, city,
+    country,
+    postbox, custtype
+} where postbox <> ' '
+union 
+select from scustom 
+{
+    id,
+    form, name,
+    street,
+    postcode, city,
+    country,
+    postbox, custtype
+} where custtype = 'B'

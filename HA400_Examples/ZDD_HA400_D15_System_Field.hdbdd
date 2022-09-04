@@ -1,0 +1,18 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D15'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Parameters bound to System Field'
+define view ZDD_HA400_D15_System_Field
+    with parameters
+         @Environment.systemField: #SYSTEM_DATE
+         p_fldate: abap.dats
+         
+as select from sbook 
+{   
+    key carrid,
+    key connid,
+    key bookid,
+    key fldate
+   
+} where fldate = :p_fldate

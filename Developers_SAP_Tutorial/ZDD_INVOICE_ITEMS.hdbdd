@@ -1,0 +1,24 @@
+@AbapCatalog.sqlViewName: 'ZDD_ITEMS_JN'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Invoice Items'
+define view ZDD_INVOICE_ITEMS
+  as select from sepm_sddl_so_invoice_item
+{
+  key sales_order_invoice_item_key,
+      header.buyer.company_name,
+      currency_code,
+      gross_amount,
+      
+      @EndUserText.quickInfo: 'Paid'
+      case header.payment_status
+          when 'P' then 'X'
+          else ' '
+      end as payment_status,
+
+      sales_order_invoice_key,
+      //header.payment_status,
+      // Associations
+      header
+} where currency_code = 'USD'

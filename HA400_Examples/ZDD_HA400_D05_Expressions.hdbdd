@@ -1,0 +1,29 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D05'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Expressions'
+define view ZDD_HA400_D05_Expressions as 
+    select from sbook 
+{
+    key concat(carrid, connid) as flightno,
+    
+    key fldate,
+    key bookid,
+    
+    concat( concat(
+        substring(order_date, 5, 2), '-'),
+        substring(order_date, 1, 4)) as ordermonth,
+    
+    case smoker
+      when 'X' then cast(loccuram as abap.fltp)*1.03
+      else cast(loccuram as abap.fltp)*0.98
+    end as adjusted_amount,
+    
+    currency_conversion(
+        amount             => loccuram,
+        source_currency    => loccurkey,
+        target_currency    => cast('EUR' as abap.cuky(5)),
+        exchange_rate_date => order_date 
+        ) as euro_amount
+}

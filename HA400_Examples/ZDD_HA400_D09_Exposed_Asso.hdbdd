@@ -1,0 +1,29 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D09'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Exposed Association'
+define view ZDD_HA400_D09_Exposed_Asso
+  as select from sbook
+  association [1] to scustom as _Customer on sbook.customid = _Customer.id
+{
+  key carrid,
+  key connid,
+  key fldate,
+  key bookid,
+      @Semantics.currencyCode
+      loccurkey as currcode,
+
+      @Semantics.amount.currencyCode: 'currcode'
+      loccuram,
+
+      _Customer.name,
+      _Customer.custtype,
+
+      //Prerequisite for exposed association:
+      customid,
+      //Exposed association:
+      _Customer
+}
+where
+  cancelled = ' '

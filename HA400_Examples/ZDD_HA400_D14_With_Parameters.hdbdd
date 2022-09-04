@@ -1,0 +1,32 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D14'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'View with parameters'
+define view ZDD_HA400_D14_With_Parameters
+    with parameters
+         target_curr:   s_currcode,
+         smoker_factor: abap.curr(15,2),
+         nonsm_factor:  abap.curr(15,2)
+
+as select from sbook 
+{   
+    key carrid,
+    key connid,
+    key bookid,
+    key fldate,
+    
+    case smoker
+        when 'X'
+        -- syntax option: prefix param with $parameters
+        then cast(loccuram * $parameters.smoker_factor as abap.fltp)
+        else cast(loccuram * $parameters.nonsm_factor as abap.fltp)
+    end as adjusted_amount,
+    
+   cast( currency_conversion( 
+            amount             => loccuram, 
+            source_currency    => loccurkey, 
+            --syntax option: prefix parameter with colon
+            target_currency    => :target_curr, 
+            exchange_rate_date => order_date  ) as abap.fltp) as euro_amount
+} where loccurkey <> $parameters.target_curr

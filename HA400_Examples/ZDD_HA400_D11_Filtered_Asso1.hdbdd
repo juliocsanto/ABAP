@@ -1,0 +1,19 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D11'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Filtered Association'
+define view ZDD_HA400_D11_Filtered_Asso1 as 
+    select from scustom
+        association [0..*] to sbook as _Bookings
+            on scustom.id = _Bookings.customid 
+{
+    key id,
+    name,
+    
+    //exposed associations - 3 filtered
+    _Bookings[class = 'C'] as business_flights,
+    _Bookings[class = 'Y'] as economy_flights,
+    _Bookings[class = 'F'] as firstclass_flights,
+    _Bookings
+}

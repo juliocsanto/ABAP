@@ -1,0 +1,12 @@
+@AbapCatalog.sqlViewAppendName: 'ZDD_HA400_D13'
+@EndUserText.label: 'Extension View'
+extend view ZDD_HA400_D03_Brackets 
+       with ZDD_HA400_D13_Extension
+{
+    concat(carrid, connid) as flightno,
+    order_date,
+    case reserved
+        when 'X' then 'Reserved'
+        else          'Booked'
+    end as reserved    
+}

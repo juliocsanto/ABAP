@@ -1,0 +1,30 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D08'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Associations'
+define view ZDD_HA400_D08_Associations as 
+    select from sbook 
+// Definition using classical join 
+//    inner join scustom as customer
+// Equivalent using association
+      association [1] to scustom as _Customer
+        on sbook.customid = _Customer.id
+{
+    key carrid,
+    
+    @Semantics.currencyCode
+    loccurkey as currcode,
+    
+    @Semantics.amount.currencyCode: 'currcode'
+    sum(loccuram) as total_amount,
+    
+    _Customer.region,
+    _Customer.discount
+}
+where _Customer.country = 'US'
+group by carrid,
+         loccurkey,
+         _Customer.region,
+         _Customer.discount
+         

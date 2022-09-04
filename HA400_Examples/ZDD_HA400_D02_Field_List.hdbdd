@@ -1,0 +1,12 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D02'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Field List'
+define view ZDD_HA400_D02_Field_List as 
+select carrid   as airline,
+       connid   as flightnumber,
+       fldate   as flightdate,
+       bookid   as id,
+       customid as customer
+from sbook 

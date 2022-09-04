@@ -1,0 +1,23 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D03'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AbapCatalog.buffering.status: #ACTIVE
+@AbapCatalog.buffering.type: #SINGLE
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Data Definition With Brackets'
+
+define view ZDD_HA400_D03_Brackets as 
+    select from sbook 
+{
+    key carrid   as airline,
+    key connid   as flightnumber,
+    key fldate   as flightdate,
+    key bookid   as id,
+    customid     as customer,
+    
+    @Semantics.amount.currencyCode: 'CURRENCY'
+    loccuram     as amount,         //Type CURR
+    
+    @Semantics.currencyCode: true
+    loccurkey    as currency        //Type CUKY
+}

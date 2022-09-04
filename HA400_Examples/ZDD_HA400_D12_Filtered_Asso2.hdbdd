@@ -1,0 +1,16 @@
+@AbapCatalog.sqlViewName: 'ZDD_HA400_D12'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Filtered Association 2'
+define view ZDD_HA400_D12_Filtered_Asso2 as 
+   select from scustom
+     association [0..*] to sbook as _Bookings
+        on scustom.id = _Bookings.customid
+{
+    key id,
+    name,
+    _Bookings[1: fldate = '20220409'].carrid as ny_booking_carrid,
+    _Bookings[1: fldate = '20220409'].connid as ny_booking_connid,
+    _Bookings      
+}
