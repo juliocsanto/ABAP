@@ -5,6 +5,9 @@ To do so is used parallel processing using the *CALL FUNCTION STARTING NEW TASK 
 
 By doing that, the program that used to execute about 15 minutes executed up to 1 minute.
 
+Obs:
+- The function module must be with processing type as Remote-Enabled Module.
+
 Sources to review and study to achieve even better performance in ABAP code:
 - Youtube Video: https://www.youtube.com/watch?v=rq4v22HgtOs 
 - SAP Documentation: https://help.sap.com/doc/saphelp_nw73ehp1/7.31.19/en-us/4d/909309eba36e73e10000000a15822b/content.htm?no_cache=true#:~:text=Parallel%20processing%20is%20implemented%20in,if%20they%20are%20started%20interactively 
