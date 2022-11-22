@@ -1,5 +1,5 @@
 *&---------------------------------------------------------------------*
-*& Include          zmm_parallel_processing_f01
+*& Include          ZMM_SHORTAGE_POC_ALV_F01
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
 *& Form GET_DATA
@@ -55,7 +55,9 @@ FORM f_get_data .
     lv_max_threads = 1.
   ENDIF.
 
-  IF lv_max_threads > 1.
+  IF lv_max_threads > 2.
+    lv_max_threads = lv_max_threads - 2.
+  ELSEIF lv_max_threads EQ 2.
     lv_max_threads = lv_max_threads - 1.
   ENDIF.
 
@@ -81,7 +83,7 @@ FORM f_get_data .
       DATA(lv_lines_to_be_deleted) = COND i(
                                        WHEN lv_tot_records LT lv_package_count - 1
                                          THEN 0
-                                       ELSE lv_package_count - 1
+                                       ELSE lv_package_count + 1
                                      ).
     ELSEIF lv_tot_records LT lv_lines_to_be_deleted.
       CLEAR lv_lines_to_be_deleted.
@@ -93,7 +95,8 @@ FORM f_get_data .
       DELETE lt_matnr_package FROM lv_lines_to_be_deleted.
     ENDIF.
 
-    DATA(lv_task_name) = |Z_SHORTAGE_PROCESS_{ lv_task_count }|.
+    GET TIME STAMP FIELD DATA(lv_timestamp).
+    DATA(lv_task_name) = |Z_EXTERNAL_STOCK_{ lv_task_count }_{ lv_timestamp }|.
 
     CALL FUNCTION 'ZMM_SHORTAGE_PARALLEL_PROC'
       STARTING NEW TASK lv_task_name
@@ -110,13 +113,17 @@ FORM f_get_data .
         OTHERS                = 3.
 
     IF sy-subrc NE 0.
-      MESSAGE |Error at parallel processing.| TYPE 'I' DISPLAY LIKE 'W'.
+      MESSAGE |Error at starting parallel processing: { lv_task_name }| TYPE 'I' DISPLAY LIKE 'W'.
     ELSE.
       ADD 1 TO lv_initiated.
     ENDIF.
 
     IF lv_lines_to_be_deleted IS NOT INITIAL.
-      DATA(lv_lines_to_del_from_source) = lv_lines_to_be_deleted - 1.
+      DATA(lv_lines_to_del_from_source) = COND i( WHEN lv_lines_to_be_deleted GT 1
+                                              THEN lv_lines_to_be_deleted - 1
+                                            ELSE lv_lines_to_be_deleted
+                                    ).
+
       DELETE lt_mara FROM 1 TO lv_lines_to_del_from_source.
     ELSE.
       CLEAR lt_mara.
