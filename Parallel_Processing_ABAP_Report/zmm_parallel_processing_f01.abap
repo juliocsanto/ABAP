@@ -96,7 +96,7 @@ FORM f_get_data .
     ENDIF.
 
     GET TIME STAMP FIELD DATA(lv_timestamp).
-    DATA(lv_task_name) = |Z_EXTERNAL_STOCK_{ lv_task_count }_{ lv_timestamp }|.
+    DATA(lv_task_name) = |ZMM_SHORTAGE_{ lv_task_count }_{ lv_timestamp }|.
 
     CALL FUNCTION 'ZMM_SHORTAGE_PARALLEL_PROC'
       STARTING NEW TASK lv_task_name
